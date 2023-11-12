@@ -1,0 +1,15 @@
+```{r}
+library(dplyr)
+library(httr2)
+library(jsonlite)
+```
+```{r}
+key <- "AIzaSyAKRBd0f4FyqVwkeVABHLW5Acw0f1m6kp8"
+base_url <- "https://www.googleapis.com/youtube/v3/search"
+
+request(base_url) |>
+  req_url_query(part = "snippet",
+                q = "MrBeast",
+                key = "AIzaSyAKRBd0f4FyqVwkeVABHLW5Acw0f1m6kp8") |>
+  req_perform() -> resp
+```
