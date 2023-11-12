@@ -1,0 +1,13 @@
+```{r}
+base_url <- "https://www.googleapis.com/youtube/v3/search"
+
+request(base_url) |>
+  req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
+                part = "snippet",
+                q = "MrBeast") |>
+  req_perform() -> resp
+
+resp |>
+  resp_body_json() -> ex1
+```
+
