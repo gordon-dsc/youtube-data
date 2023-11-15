@@ -7,6 +7,7 @@ format: html
 library(tidyverse)
 library(rvest)
 library(dplyr) 
+library(httr2)
 ```
 
 
@@ -19,3 +20,61 @@ tibble(most_sub) -> most_subs
 
 slice(.data = most_subs, 1:50) -> most_subss
 ```
+
+
+
+
+```{r}
+base_url <- "https://www.googleapis.com/youtube/v3/search"
+
+request(base_url) |>
+  req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
+                part = "snippet",
+                q = "MrBeast") |>
+  req_perform() -> resp
+
+resp |>
+  resp_body_json() -> ex1
+```
+
+
+
+
+```{r}
+base_url <- "https://www.googleapis.com/youtube/v3/channels"
+
+request(base_url) |>
+  req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
+                part = "snippet,contentDetails,statistics",
+                id = "UCX6OQ3DkcsbYNE6H8uQQuVA") |>
+  req_perform() -> respons
+
+respons |>
+  resp_body_json() -> ex2
+```
+
+
+```{r}
+stat <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
+                  part = "snippet,contentDetails,statistics",
+                  id = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+  x[["items"]][[1]][["statistics"]]
+}
+
+stat("UCX6OQ3DkcsbYNE6H8uQQuVA") -> ex3
+```
+
+
+
+
+
+
+
+
+
+
+
