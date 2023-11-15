@@ -6,9 +6,10 @@ format: html
 ```{r packages}
 library(tidyverse)
 library(rvest)
-library(dplyr) 
+library(dplyr)
 library(httr2)
 ```
+
 
 
 ```{r}
@@ -19,8 +20,11 @@ read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channel
 tibble(most_sub) -> most_subs
 
 slice(.data = most_subs, 1:50) -> most_subss
-```
 
+atomic_vector <- most_subss$most_sub
+print(atomic_vector) -> a_vector
+
+```
 
 
 
@@ -39,7 +43,6 @@ resp |>
 
 
 
-
 ```{r}
 base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
@@ -52,6 +55,7 @@ request(base_url) |>
 respons |>
   resp_body_json() -> ex2
 ```
+
 
 
 ```{r}
@@ -67,9 +71,6 @@ stat <- function(x) {
 
 stat("UCX6OQ3DkcsbYNE6H8uQQuVA") -> ex3
 ```
-
-
-
 
 
 
