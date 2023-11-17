@@ -19,10 +19,10 @@ read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channel
 
 tibble(most_sub) -> most_subs
 
-slice(.data = most_subs, 1:50) -> most_subss
+slice(.data = most_subs, 1:5) -> most_subss
 
 atomic_vector <- most_subss$most_sub
-print(atomic_vector) -> a_vector
+atomic_vector
 
 ```
 
@@ -30,16 +30,40 @@ print(atomic_vector) -> a_vector
 
 ```{r}
 base_url <- "https://www.googleapis.com/youtube/v3/search"
-
-request(base_url) |>
-  req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
-                part = "snippet",
-                q = "MrBeast") |>
-  req_perform() -> resp
-
-resp |>
-  resp_body_json() -> ex1
+channlid <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
+                  part = "snippet",
+                  q = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+    assign("x", x[["items"]][[1]][["snippet"]][["channelId"]], envir = .GlobalEnv)
+}
 ```
+
+
+
+```{r}
+my_list <- list()
+for (x in atomic_vector) {
+  channlid(x) -> y
+  my_list[x] <- y
+} 
+
+my_data_frame <- as.data.frame(my_list)
+
+my_data_frame |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "channel") |>
+  select(channel) -> channels
+  
+
+vector <- channels$channel
+vector
+```
+
+
 
 
 
@@ -59,21 +83,28 @@ respons |>
 
 
 ```{r}
+base_url <- "https://www.googleapis.com/youtube/v3/channels"
+
 stat <- function(x) {
   request(base_url) |>
-    req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
+    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
                   part = "snippet,contentDetails,statistics",
                   id = x) |>
     req_perform() |>
     resp_body_json() -> x
   x[["items"]][[1]][["statistics"]]
 }
-
-stat("UCX6OQ3DkcsbYNE6H8uQQuVA") -> ex3
 ```
 
 
 
+```{r}
+the_list <- list()
+for (x in vector) {
+  stat(x) -> y
+  the_list[x] <- y
+}
+```
 
 
 
