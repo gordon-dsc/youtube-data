@@ -2,6 +2,9 @@
 library(dplyr)
 library(httr2)
 library(jsonlite)
+library(tidyverse)
+library(here)
+library(ggplot2)
 ```
 
 
@@ -9,9 +12,7 @@ library(jsonlite)
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 
 request(base_url) |>
-  req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
-                part = "snippet",
-                q = "MrBeast") |>
+  req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI") |>
   req_perform() -> resp
 
 resp |>
@@ -19,17 +20,26 @@ resp |>
 ```
 
 ```{r}
+base_url <- "https://www.googleapis.com/youtube/v3/search"
 channlid <- function(x) {
   request(base_url) |>
-    req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
+    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
                   part = "snippet",
-                  q = "x") |>
+                  q = x) |>
     req_perform() |>
-    resp_body_json() -> "x"
+    resp_body_json() -> x
+    assign("x", x[["items"]][[1]][["snippet"]][["channelId"]], envir = .GlobalEnv)
 }
 ```
 
 ```{r}
-channlid(MrBeast) 
+for (x in sample) {
+  channlid(x) -> Listt
+}
+```
+
+
+```{r}
+channlid("MrBEast")
 ```
 
