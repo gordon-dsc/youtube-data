@@ -40,8 +40,4 @@ for (x in a_vector) {
 ```
 
 
-```{r}
-btomic_vector <- list2$my_list
-print(btmoic_vector) -> b_vector
-```
 
