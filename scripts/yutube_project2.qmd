@@ -23,7 +23,7 @@ resp |>
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 channlid <- function(x) {
   request(base_url) |>
-    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
+    req_url_query(key = "AIzaSyAhmTenXlu7rZAF_vvLce-2Y8Wt3srRdSI",
                   part = "snippet",
                   q = x) |>
     req_perform() |>
@@ -33,13 +33,15 @@ channlid <- function(x) {
 ```
 
 ```{r}
-for (x in sample) {
-  channlid(x) -> Listt
-}
+for (x in a_vector) {
+  channlid(x) -> y
+  mylist[x] <- y
+} 
 ```
 
 
 ```{r}
-channlid("MrBEast")
+btomic_vector <- list2$my_list
+print(btmoic_vector) -> b_vector
 ```
 
