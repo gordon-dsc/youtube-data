@@ -33,6 +33,7 @@ channlid <- function(x) {
 ```
 
 ```{r}
+mylist = list()
 for (x in a_vector) {
   channlid(x) -> y
   mylist[x] <- y
