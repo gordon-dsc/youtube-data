@@ -9,7 +9,7 @@ library(jsonlite)
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 
 request(base_url) |>
-  req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
+  req_url_query(key = "AIzaSyBj1atKU-cgCTgHCZLjozmOkUF5S461bwk",
                 part = "snippet",
                 q = "MrBeast") |>
   req_perform() -> resp
@@ -27,7 +27,7 @@ library(dplyr)
 library(ggplot2)
 
 #save your API key in the object key
-key <- "AIzaSyAKRBd0f4FyqVwkeVABHLW5Acw0f1m6kp8"
+key <- "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc"
 
 #YouTube channels either have a channel id or a user id
 MrBeastChannelID<-"UCX6OQ3DkcsbYNE6H8uQQuVA" #channel id
