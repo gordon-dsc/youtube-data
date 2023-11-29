@@ -68,8 +68,6 @@ channel_id_list <- as.data.frame(vector)
 
 
 
-
-
 ```{r}
 #example of finding statistics by using the channel ID
 base_url <- "https://www.googleapis.com/youtube/v3/channels"
@@ -155,10 +153,100 @@ sub_count_list |>
 
 
 ```{r}
-total <- cbind(most_subss,view_count_list, sub_count_list)
+#title
+base_url <- "https://www.googleapis.com/youtube/v3/channels"
+
+title <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
+                  part = "snippet,contentDetails,statistics",
+                  id = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+  x[["items"]][[1]][["snippet"]][["title"]]
+}
+
+the_list <- list()
+for (x in vector) {
+  title(x) -> y
+  the_list[x] <- y
+}
+
+title_list <- as.data.frame(the_list)
+
+title_list |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "title") |>
+  select(title) -> title_list
+```
 
 
 
+```{r}
+#country 
+base_url <- "https://www.googleapis.com/youtube/v3/channels"
+
+country <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
+                  part = "snippet,contentDetails,statistics",
+                  id = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+  x[["items"]][[1]][["snippet"]][["country"]]
+}
+
+the_list <- list()
+for (x in vector) {
+  country(x) -> y
+  the_list[x] <- y
+}
+
+country_list <- as.data.frame(the_list)
+
+country_list |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "country") |>
+  select(country) -> country_list
+```
+
+
+
+```{r}
+#video count 
+base_url <- "https://www.googleapis.com/youtube/v3/channels"
+
+video_count <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
+                  part = "snippet,contentDetails,statistics",
+                  id = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+  x[["items"]][[1]][["statistics"]][["videoCount"]]
+}
+
+the_list <- list()
+for (x in vector) {
+  video_count(x) -> y
+  the_list[x] <- y
+}
+
+video_count_list <- as.data.frame(the_list)
+
+video_count_list |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "video") |>
+  select(video) -> video_count_list
+```
+
+
+
+```{r}
+total <- cbind(title_list,country_list, view_count_list, sub_count_list, video_count_list)
 ```
 
 
