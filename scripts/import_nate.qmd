@@ -8,16 +8,15 @@ library(tidyverse)
 library(rvest)
 library(dplyr)
 library(httr2)
+library(dplyr) 
 ```
-
-
-
 ```{r}
 read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels") |>
   html_elements("td:nth-child(2)") |>
   html_text2() -> most_sub
 
 tibble(most_sub) -> most_subs
+
 
 slice(.data = most_subs, 1:5) -> most_subss
 
@@ -112,3 +111,6 @@ the_data_frame <- as.data.frame(the_list)
 
 
 
+=======
+slice(.data = most_subs, 1:50) -> most_subss
+```
