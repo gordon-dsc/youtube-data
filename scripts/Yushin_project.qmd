@@ -105,6 +105,11 @@ for (x in vector) {
 }
 
 the_title <- as.data.frame(the_list)
+the_title |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "title") |>
+  select(title) -> title_list
 ```
 
 channel_viewcount
@@ -128,11 +133,17 @@ viewcount <- function(x) {
 ```{r}
 the_list <- list()
 for (x in vector) {
-  title(x) -> y
+  viewcount(x) -> y
   the_list[x] <- y
 }
 
 the_viewcount <- as.data.frame(the_list)
+the_viewcount |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "viewcount") |>
+  select(viewcount) -> viewcount_list
+
 ```
 
 channel_country
@@ -162,6 +173,11 @@ for (x in vector) {
 }
 
 the_country <- as.data.frame(the_list)
+the_country |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "country") |>
+  select(country) -> country_list
 ```
 
 
@@ -177,7 +193,7 @@ subscribe <- function(x) {
                   id = x) |>
     req_perform() |>
     resp_body_json() -> x
-  x[["items"]][[1]][["snippet"]][["country"]]
+  x[["items"]][[1]][["statistics"]][["subscriberCount"]]
 }
 ```
 
@@ -191,6 +207,11 @@ for (x in vector) {
 }
 
 the_subscribe <- as.data.frame(the_list)
+the_subscribe |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "sub_count") |>
+  select(sub_count) -> subscribecount_list
 ```
 
 channel_videocount
@@ -219,4 +240,21 @@ for (x in vector) {
 }
 
 the_videocount<- as.data.frame(the_list)
+the_videocount |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "video_count") |>
+  select(video_count) -> videocount_list
 ```
+
+
+```{r}
+example <- cbind(title_list, country_list, subscribecount_list, viewcount_list, videocount_list)
+example |>
+  mutate(viewcount = as.double(viewcount),
+         sub_count = as.numeric(sub_count),
+         video_count = as.double(video_count),
+         view_per_sub = viewcount/sub_count,
+         view_per_video = viewcount/video_count) -> final_data
+```
+
