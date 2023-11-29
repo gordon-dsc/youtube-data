@@ -113,7 +113,6 @@ for (x in vector) {
 
 view_count_list <- as.data.frame(the_list)
 
-
 view_count_list |>
   pivot_longer(cols = 1:5,
                names_to = "a",
@@ -124,8 +123,18 @@ view_count_list |>
 
 
 ```{r}
+#function that extracts subscriber count
+base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
-
+sub_count <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
+                  part = "snippet,contentDetails,statistics",
+                  id = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+  x[["items"]][[1]][["statistics"]][["subscriberCount"]]
+}
 
 
 
