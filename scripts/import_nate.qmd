@@ -22,7 +22,7 @@ tibble(most_sub) -> most_subs
 slice(.data = most_subs, 1:5) -> most_subss
 
 atomic_vector <- most_subss$most_sub
-atomic_vector
+print(atomic_vector) -> a_vector
 
 ```
 
@@ -45,7 +45,7 @@ channlid <- function(x) {
 
 ```{r}
 my_list <- list()
-for (x in atomic_vector) {
+for (x in a_vector) {
   channlid(x) -> y
   my_list[x] <- y
 } 
@@ -85,14 +85,14 @@ respons |>
 ```{r}
 base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
-stat <- function(x) {
+view_count <- function(x) {
   request(base_url) |>
     req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
                   part = "snippet,contentDetails,statistics",
                   id = x) |>
     req_perform() |>
     resp_body_json() -> x
-  x[["items"]][[1]][["statistics"]]
+  x[["items"]][[1]][["statistics"]][["viewCount"]]
 }
 ```
 
@@ -101,9 +101,11 @@ stat <- function(x) {
 ```{r}
 the_list <- list()
 for (x in vector) {
-  stat(x) -> y
+  view_count(x) -> y
   the_list[x] <- y
 }
+
+the_data_frame <- as.data.frame(the_list)
 ```
 
 
