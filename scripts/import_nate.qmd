@@ -13,6 +13,7 @@ library(httr2)
 
 
 ```{r}
+#web scraping - finding top 50 youtuber
 read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels") |>
   html_elements("td:nth-child(2)") |>
   html_text2() -> most_sub
@@ -29,6 +30,7 @@ print(atomic_vector) -> a_vector
 
 
 ```{r}
+#function to get channel ID
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 channlid <- function(x) {
   request(base_url) |>
@@ -44,6 +46,7 @@ channlid <- function(x) {
 
 
 ```{r}
+#using the function to find channel ID
 my_list <- list()
 for (x in a_vector) {
   channlid(x) -> y
@@ -60,7 +63,7 @@ my_data_frame |>
   
 
 vector <- channels$channel
-vector
+channel_id_list <- as.data.frame(vector)
 ```
 
 
@@ -68,6 +71,7 @@ vector
 
 
 ```{r}
+#example of finding statistics by using the channel ID
 base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
 request(base_url) |>
@@ -83,6 +87,7 @@ respons |>
 
 
 ```{r}
+#function that extracts view count
 base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
 view_count <- function(x) {
@@ -99,14 +104,38 @@ view_count <- function(x) {
 
 
 ```{r}
+#using that fuction to make a list of the view counts of top 50 youtuber
 the_list <- list()
 for (x in vector) {
   view_count(x) -> y
   the_list[x] <- y
 }
 
-the_data_frame <- as.data.frame(the_list)
+view_count_list <- as.data.frame(the_list)
+
+
+view_count_list |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "view_count") |>
+  select(view_count) -> view_count_list
 ```
+
+
+
+```{r}
+
+
+
+
+
+
+
+```
+
+
+
+
 
 
 
