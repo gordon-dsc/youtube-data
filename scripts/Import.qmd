@@ -28,7 +28,7 @@ print(atomic_vector) -> a_vector
 ```
 
 
-function of getting channel ID
+
 ```{r}
 #importing data with youtube api 
 #function that grabs channel ID using the channel names
@@ -68,7 +68,7 @@ id_vector
 ```
 
 
-function of getting channel info
+
 ```{r}
 #importing data with YouTube api
 #function that grabs channel information (statistics) 
