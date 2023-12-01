@@ -1,0 +1,77 @@
+```{r}
+library(tidyverse)
+library(rvest)
+library(dplyr)
+library(httr2)
+library(tidyr)
+library(janitor)
+```
+
+web scraping
+```{r}
+read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels") |>
+  html_elements("td:nth-child(2)") |>
+  html_text2() -> most_sub
+
+tibble(most_sub) -> most_subs
+
+slice(.data = most_subs, 1:5) -> most_subss
+
+atomic_vector <- most_subss$most_sub
+print(atomic_vector) -> a_vector
+
+```
+
+function of getting channel ID
+```{r}
+base_url <- "https://www.googleapis.com/youtube/v3/search"
+channlid <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyDupk9NQM9SEnR37y351bBr4ijqxwEsYsE",
+                  part = "snippet",
+                  q = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+    assign("x", x[["items"]][[1]][["snippet"]][["channelId"]], envir = .GlobalEnv)
+}
+```
+
+convert into atomic vector
+```{r}
+my_list <- list()
+for (x in a_vector) {
+  channlid(x) -> y
+  my_list[x] <- y
+} 
+
+my_data_frame <- as.data.frame(my_list)
+
+my_data_frame |>
+  pivot_longer(cols = 1:5,
+               names_to = "a",
+               values_to = "channel") |>
+  select(channel) -> channels
+  
+
+id_vector <- channels$channel
+id_vector
+```
+
+function of getting channel info
+```{r}
+base_url <- "https://www.googleapis.com/youtube/v3/channels"
+
+info <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyDupk9NQM9SEnR37y351bBr4ijqxwEsYsE",
+                  part = "statistics,snippet",
+                  id = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+}
+```
+
+list of channel info
+```{r}
+map(.x = id_vector, .f = info) -> info_list
+```
