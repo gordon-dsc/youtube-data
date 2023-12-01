@@ -1,6 +1,8 @@
 
 
 ```{r}
+#modifying info_df (list) to get the final data frame needed
+#columns: title (name of the channel), country, view (view count), sub (subscriber count), video (video count) 
 info_df <- tibble(a = info_list)
 
 info_df |>
@@ -19,5 +21,5 @@ info_df |>
   select(title, country, view, sub, video)|>
   mutate(view = as.double(view),
          sub = as.double(sub),
-         video = as.double(video))  -> final_list
+         video = as.double(video))  -> final_data
 ```

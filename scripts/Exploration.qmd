@@ -2,6 +2,7 @@
 
 
 ```{r}
+#making two new columns that compares view count with subscriber count and video count
 final_list |>
   mutate(view_per_sub = view/sub,
          view_per_video = view/video) -> final_df
