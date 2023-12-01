@@ -6,10 +6,8 @@ format: html
 ```{r packages}
 library(tidyverse)
 library(rvest)
-library(dplyr)
-library(httr2)
+library(dplyr) 
 ```
-
 
 
 ```{r}
@@ -19,96 +17,5 @@ read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channel
 
 tibble(most_sub) -> most_subs
 
-slice(.data = most_subs, 1:5) -> most_subss
-
-atomic_vector <- most_subss$most_sub
-print(atomic_vector) -> a_vector
-
+slice(.data = most_subs, 1:50) -> most_subss
 ```
-
-
-
-```{r}
-base_url <- "https://www.googleapis.com/youtube/v3/search"
-channlid <- function(x) {
-  request(base_url) |>
-    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
-                  part = "snippet",
-                  q = x) |>
-    req_perform() |>
-    resp_body_json() -> x
-    assign("x", x[["items"]][[1]][["snippet"]][["channelId"]], envir = .GlobalEnv)
-}
-```
-
-
-
-```{r}
-my_list <- list()
-for (x in a_vector) {
-  channlid(x) -> y
-  my_list[x] <- y
-} 
-
-my_data_frame <- as.data.frame(my_list)
-
-my_data_frame |>
-  pivot_longer(cols = 1:5,
-               names_to = "a",
-               values_to = "channel") |>
-  select(channel) -> channels
-  
-
-vector <- channels$channel
-vector
-```
-
-
-
-
-
-```{r}
-base_url <- "https://www.googleapis.com/youtube/v3/channels"
-
-request(base_url) |>
-  req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
-                part = "snippet,contentDetails,statistics",
-                id = "UCX6OQ3DkcsbYNE6H8uQQuVA") |>
-  req_perform() -> respons
-
-respons |>
-  resp_body_json() -> ex2
-```
-
-
-
-```{r}
-base_url <- "https://www.googleapis.com/youtube/v3/channels"
-
-view_count <- function(x) {
-  request(base_url) |>
-    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
-                  part = "snippet,contentDetails,statistics",
-                  id = x) |>
-    req_perform() |>
-    resp_body_json() -> x
-  x[["items"]][[1]][["statistics"]][["viewCount"]]
-}
-```
-
-
-
-```{r}
-the_list <- list()
-for (x in vector) {
-  view_count(x) -> y
-  the_list[x] <- y
-}
-
-the_data_frame <- as.data.frame(the_list)
-```
-
-
-
-
-
