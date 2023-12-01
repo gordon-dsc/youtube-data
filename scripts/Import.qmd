@@ -1,4 +1,5 @@
 ```{r}
+# importing packages needed
 library(tidyverse)
 library(rvest)
 library(dplyr)
@@ -7,23 +8,29 @@ library(tidyr)
 library(janitor)
 ```
 
-web scraping
+
+
 ```{r}
+#Web scraping 
+#getting top 50 most subscribed YouTube channels from Wikipedia
 read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels") |>
   html_elements("td:nth-child(2)") |>
   html_text2() -> most_sub
 
 tibble(most_sub) -> most_subs
 
-slice(.data = most_subs, 1:5) -> most_subss
+slice(.data = most_subs, 1:50) -> most_subss
 
-atomic_vector <- most_subss$most_sub
+atomic_vector <- most_subss$most_sub.   #making the list into atomic vector
 print(atomic_vector) -> a_vector
 
 ```
 
+
 function of getting channel ID
 ```{r}
+#importing data with youtube api 
+#function that grabs channel ID using the channel names
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 channlid <- function(x) {
   request(base_url) |>
@@ -36,8 +43,10 @@ channlid <- function(x) {
 }
 ```
 
-convert into atomic vector
+
+
 ```{r}
+#using channelid function to grab the atomic vector of channel IDs
 my_list <- list()
 for (x in a_vector) {
   channlid(x) -> y
@@ -47,7 +56,7 @@ for (x in a_vector) {
 my_data_frame <- as.data.frame(my_list)
 
 my_data_frame |>
-  pivot_longer(cols = 1:5,
+  pivot_longer(cols = 1:50,
                names_to = "a",
                values_to = "channel") |>
   select(channel) -> channels
@@ -57,8 +66,11 @@ id_vector <- channels$channel
 id_vector
 ```
 
+
 function of getting channel info
 ```{r}
+#importing data with YouTube api
+#function that grabs channel information (statistics) 
 base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
 info <- function(x) {
@@ -71,7 +83,12 @@ info <- function(x) {
 }
 ```
 
-list of channel info
+
+
 ```{r}
+#using info function to get statistics of 50 Youtube channels
 map(.x = id_vector, .f = info) -> info_list
 ```
+
+
+
