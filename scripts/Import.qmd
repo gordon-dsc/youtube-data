@@ -93,3 +93,9 @@ map(.x = id_vector, .f = info) -> info_list
 
 
 
+```{r}
+#exporting raw data we collected
+capture.output(a_vector, file = "most_subscribed")
+capture.output(info_list, file = "information_list.csv") 
+```
+

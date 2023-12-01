@@ -23,3 +23,11 @@ info_df |>
          sub = as.double(sub),
          video = as.double(video))  -> final_data
 ```
+
+
+
+```{r}
+#exporting cleaned data
+write.csv(final_data, file = "cleaned_data.csv")
+```
+

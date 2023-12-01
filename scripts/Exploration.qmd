@@ -8,3 +8,10 @@ final_data |>
          view_per_video = view/video) -> final_df
 ```
 
+
+
+```{r}
+#exporting final data frame
+write.csv(final_df, file = "final_dataframe.csv")
+```
+
