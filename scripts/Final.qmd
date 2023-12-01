@@ -1,4 +1,4 @@
-
+import
 ```{r}
 library(tidyverse)
 library(rvest)
@@ -77,6 +77,23 @@ list of channel info
 map(.x = id_vector, .f = info) -> info_list
 ```
 
+tidying data frame
+```{r}
+info_df <- tibble(a = info_list)
 
-
+info_df |>
+  unnest_wider(a) |>
+  select(items)|>
+  unnest(items) |>
+  unnest_wider(items) |>
+  select(snippet, statistics) |>
+  hoist(snippet, 
+        title = c("title"),
+        country = c("country")) |>
+  hoist(statistics, 
+        view = c("viewCount"),
+        sub = c("subscriberCount"),
+        video = c("videoCount")) |>
+  select(title, country, view, sub, video) -> final_list
+```
 
