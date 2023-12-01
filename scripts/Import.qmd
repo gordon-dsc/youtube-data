@@ -13,6 +13,7 @@ library(janitor)
 ```{r}
 #Web scraping 
 #getting top 50 most subscribed YouTube channels from Wikipedia
+#Actually it turns out to be 49 because one channel (Shemaroo) was shown up twice in the Widipedia chart
 read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels") |>
   html_elements("td:nth-child(2)") |>
   html_text2() -> most_sub
@@ -21,7 +22,7 @@ tibble(most_sub) -> most_subs
 
 slice(.data = most_subs, 1:50) -> most_subss
 
-atomic_vector <- most_subss$most_sub.   #making the list into atomic vector
+atomic_vector <- most_subss$most_sub   #making the list into atomic vector
 print(atomic_vector) -> a_vector
 
 ```
@@ -34,7 +35,7 @@ function of getting channel ID
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 channlid <- function(x) {
   request(base_url) |>
-    req_url_query(key = "AIzaSyDupk9NQM9SEnR37y351bBr4ijqxwEsYsE",
+    req_url_query(key = "AIzaSyB1lLY4WEyper_eQgGceS2ieGtJi3tYLSg",
                   part = "snippet",
                   q = x) |>
     req_perform() |>
@@ -56,7 +57,7 @@ for (x in a_vector) {
 my_data_frame <- as.data.frame(my_list)
 
 my_data_frame |>
-  pivot_longer(cols = 1:50,
+  pivot_longer(cols = 1:49,
                names_to = "a",
                values_to = "channel") |>
   select(channel) -> channels
@@ -75,7 +76,7 @@ base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
 info <- function(x) {
   request(base_url) |>
-    req_url_query(key = "AIzaSyDupk9NQM9SEnR37y351bBr4ijqxwEsYsE",
+    req_url_query(key = "AIzaSyB1lLY4WEyper_eQgGceS2ieGtJi3tYLSg",
                   part = "statistics,snippet",
                   id = x) |>
     req_perform() |>
