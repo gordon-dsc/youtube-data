@@ -8,6 +8,8 @@ library(tidyverse)
 library(rvest)
 library(dplyr)
 library(httr2)
+library(tidyr)
+library(janitor)
 ```
 
 
@@ -32,7 +34,7 @@ print(atomic_vector) -> a_vector
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 channlid <- function(x) {
   request(base_url) |>
-    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
+    req_url_query(key = "AIzaSyA4Wsi18Ia6cYUZeX3NPxXhx3A3-lqXTBI",
                   part = "snippet",
                   q = x) |>
     req_perform() |>
@@ -58,9 +60,7 @@ my_data_frame |>
                values_to = "channel") |>
   select(channel) -> channels
   
-
-vector <- channels$channel
-vector
+id_vector <- channels$channel
 ```
 
 
@@ -99,7 +99,7 @@ title <- function(x) {
 
 ```{r}
 the_list <- list()
-for (x in vector) {
+for (x in id_vector) {
   title(x) -> y
   the_list[x] <- y
 }
@@ -256,5 +256,50 @@ example |>
          video_count = as.double(video_count),
          view_per_sub = viewcount/sub_count,
          view_per_video = viewcount/video_count) -> final_data
+```
+
+
+------------------------------------------------------------------
+
+get data_set as a list
+
+```{r}
+
+base_url <- "https://www.googleapis.com/youtube/v3/channels"
+
+info <- function(x) {
+  request(base_url) |>
+    req_url_query(key = "AIzaSyCq_fI_CnAymFiyFHafXUBGSIVOzwXLGqc",
+                  part = "statistics,snippet",
+                  id = x) |>
+    req_perform() |>
+    resp_body_json() -> x
+}
+```
+
+
+```{r}
+map(.x = vector, .f = info) -> test1
+```
+
+
+```{r}
+test11 <- tibble(a = test1)
+
+test11 |>
+  unnest_wider(a) |>
+  select(items)|>
+  unnest(items) |>
+  unnest_wider(items) |>
+  select(snippet, statistics) |>
+  hoist(snippet, 
+        title = c("title"),
+        country = c("country")) |>
+  hoist(statistics, 
+        view = c("viewCount"),
+        sub = c("subscriberCount"),
+        video = c("videoCount")) |>
+  select(title, country, view, sub, video) -> test111
+  
 ```
 
