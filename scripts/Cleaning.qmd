@@ -1,0 +1,23 @@
+
+
+```{r}
+info_df <- tibble(a = info_list)
+
+info_df |>
+  unnest_wider(a) |>
+  select(items)|>
+  unnest(items) |>
+  unnest_wider(items) |>
+  select(snippet, statistics) |>
+  hoist(snippet, 
+        title = c("title"),
+        country = c("country")) |>
+  hoist(statistics, 
+        view = c("viewCount"),
+        sub = c("subscriberCount"),
+        video = c("videoCount")) |>
+  select(title, country, view, sub, video)|>
+  mutate(view = as.double(view),
+         sub = as.double(sub),
+         video = as.double(video))  -> final_list
+```
