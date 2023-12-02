@@ -1,0 +1,11 @@
+
+
+Variables
+
+title = name of the top 49 YouTube Channels
+country = country where each channel was created
+view = total view count of each YouTube channel
+sub = total subscriber count of each YouTube channel
+video = total number of videos uploaded in each YouTube channels
+view_per_sub = ratio of view count per subscriber count of each YouTube channel
+view_per_video = ratio of view count per total number of videos of each YouTube channel
