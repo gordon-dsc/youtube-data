@@ -1,5 +1,5 @@
-import
 ```{r}
+# importing packages needed
 library(tidyverse)
 library(rvest)
 library(dplyr)
@@ -8,27 +8,34 @@ library(tidyr)
 library(janitor)
 ```
 
-web scraping
+
+
 ```{r}
+#Web scraping 
+#getting top 50 most subscribed YouTube channels from Wikipedia
+#Actually it turns out to be 49 because one channel (Shemaroo) was shown up twice in the Widipedia chart
 read_html("https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels") |>
   html_elements("td:nth-child(2)") |>
   html_text2() -> most_sub
 
 tibble(most_sub) -> most_subs
 
-slice(.data = most_subs, 1:5) -> most_subss
+slice(.data = most_subs, 1:50) -> most_subss
 
-atomic_vector <- most_subss$most_sub
+atomic_vector <- most_subss$most_sub   #making the list into atomic vector
 print(atomic_vector) -> a_vector
 
 ```
 
-function of getting channel ID
+
+
 ```{r}
+#importing data with youtube api 
+#function that grabs channel ID using the channel names
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 channlid <- function(x) {
   request(base_url) |>
-    req_url_query(key = "AIzaSyDupk9NQM9SEnR37y351bBr4ijqxwEsYsE",
+    req_url_query(key = "AIzaSyB1lLY4WEyper_eQgGceS2ieGtJi3tYLSg",
                   part = "snippet",
                   q = x) |>
     req_perform() |>
@@ -37,8 +44,10 @@ channlid <- function(x) {
 }
 ```
 
-convert into atomic vector
+
+
 ```{r}
+#using channelid function to grab the atomic vector of channel IDs
 my_list <- list()
 for (x in a_vector) {
   channlid(x) -> y
@@ -48,7 +57,7 @@ for (x in a_vector) {
 my_data_frame <- as.data.frame(my_list)
 
 my_data_frame |>
-  pivot_longer(cols = 1:5,
+  pivot_longer(cols = 1:49,
                names_to = "a",
                values_to = "channel") |>
   select(channel) -> channels
@@ -58,13 +67,16 @@ id_vector <- channels$channel
 id_vector
 ```
 
-function of getting channel info
+
+
 ```{r}
+#importing data with YouTube api
+#function that grabs channel information (statistics) 
 base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
 info <- function(x) {
   request(base_url) |>
-    req_url_query(key = "AIzaSyDupk9NQM9SEnR37y351bBr4ijqxwEsYsE",
+    req_url_query(key = "AIzaSyB1lLY4WEyper_eQgGceS2ieGtJi3tYLSg",
                   part = "statistics,snippet",
                   id = x) |>
     req_perform() |>
@@ -72,28 +84,18 @@ info <- function(x) {
 }
 ```
 
-list of channel info
+
+
 ```{r}
+#using info function to get statistics of 50 Youtube channels
 map(.x = id_vector, .f = info) -> info_list
 ```
 
-tidying data frame
-```{r}
-info_df <- tibble(a = info_list)
 
-info_df |>
-  unnest_wider(a) |>
-  select(items)|>
-  unnest(items) |>
-  unnest_wider(items) |>
-  select(snippet, statistics) |>
-  hoist(snippet, 
-        title = c("title"),
-        country = c("country")) |>
-  hoist(statistics, 
-        view = c("viewCount"),
-        sub = c("subscriberCount"),
-        video = c("videoCount")) |>
-  select(title, country, view, sub, video) -> final_list
+
+```{r}
+#exporting raw data we collected
+capture.output(a_vector, file = "most_subscribed")
+capture.output(info_list, file = "information_list.csv") 
 ```
 
