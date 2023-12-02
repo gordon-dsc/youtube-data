@@ -31,3 +31,18 @@ info_df |>
 write.csv(final_data, file = "cleaned_data.csv")
 ```
 
+
+
+```{r}
+#making two new columns that compares view count with subscriber count and video count
+final_data |>
+  mutate(view_per_sub = view/sub,
+         view_per_video = view/video) -> final_df
+```
+
+
+
+```{r}
+#exporting final data frame
+write.csv(final_df, file = "final_dataframe.csv")
+```

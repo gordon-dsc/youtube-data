@@ -1,0 +1,16 @@
+
+
+"https://en.wikipedia.org/wiki/List_of_most-subscribed_YouTube_channels"
+- Wikipedia page we used to web scrap the names of the top 50 YouTube channels
+
+
+
+
+"https://www.googleapis.com/youtube/v3/search"
+- YouTube API base url for getting channel IDs using the names of the channels
+
+
+
+
+"https://www.googleapis.com/youtube/v3/channels"
+- YouTube API base url for getting information(statistics) using the channel IDs
