@@ -6,6 +6,7 @@ library(dplyr)
 library(httr2)
 library(tidyr)
 library(janitor)
+library(ggplot2)
 ```
 
 
@@ -34,7 +35,7 @@ print(atomic_vector) -> a_vector
 #function that grabs channel ID using the channel names
 base_url <- "https://www.googleapis.com/youtube/v3/search"
 channlid <- function(x) {
-  request(base_url) |>
+  request(base_url) |>                      #using the base url to request 
     req_url_query(key = "AIzaSyB1lLY4WEyper_eQgGceS2ieGtJi3tYLSg",
                   part = "snippet",
                   q = x) |>
@@ -70,7 +71,6 @@ id_vector
 
 
 ```{r}
-#importing data with YouTube api
 #function that grabs channel information (statistics) 
 base_url <- "https://www.googleapis.com/youtube/v3/channels"
 
@@ -88,6 +88,7 @@ info <- function(x) {
 
 ```{r}
 #using info function to get statistics of 50 Youtube channels
+#api request 
 map(.x = id_vector, .f = info) -> info_list
 ```
 

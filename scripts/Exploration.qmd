@@ -2,16 +2,43 @@
 
 
 ```{r}
-#making two new columns that compares view count with subscriber count and video count
-final_data |>
-  mutate(view_per_sub = view/sub,
-         view_per_video = view/video) -> final_df
+#making a bar plot that counts channels for country
+final_df |>
+  group_by(country) |>
+  count(country) |>
+  mutate(n = as.integer(n)) -> plot_1
+
+ggplot(plot_1) +
+  geom_col(aes(x = country, y = n), fill = "black") + 
+  labs(y = "count")
+
 ```
 
 
 
 ```{r}
-#exporting final data frame
-write.csv(final_df, file = "final_dataframe.csv")
+#making a scatter plot comparing subscriber count and view count 
+ggplot(final_df) +
+  geom_point(aes(sub, view)) +
+  geom_smooth(aes(sub, view), method = "lm") +
+  labs(x = "subscriber count", y = "view count")
+
+#making a scatter plot comparing video count and view count
+ggplot(final_df) +
+  geom_point(aes(video, view)) +
+  geom_smooth(aes(video, view), method = "lm") +
+  labs(x = "video count", y = "view count")
+```
+
+
+
+
+```{r}
+ggplot(final_df) +
+  geom_col(aes(title, view_per_sub))
+
+ggplot(final_df) +
+  geom_col(aes(title, view_per_video))
+
 ```
 
