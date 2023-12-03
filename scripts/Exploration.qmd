@@ -3,11 +3,12 @@
 
 ```{r}
 #visualization 
-ggplot2 |>
-  
+final_df |>
+  group_by(country) |>
+  count(country) |>
+  mutate(n = as.integer(n)) -> plot_1
+
+ggplot(plot_1) +
+  geom_col(aes(x = country, y = n), fill = "black") + labs(y = "count")
 
 ```
-
-
-# barplot country count 
-#

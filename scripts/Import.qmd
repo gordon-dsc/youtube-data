@@ -6,6 +6,7 @@ library(dplyr)
 library(httr2)
 library(tidyr)
 library(janitor)
+library(ggplot2)
 ```
 
 
