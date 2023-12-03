@@ -23,22 +23,21 @@ ggplot(final_df) +
   geom_smooth(aes(sub, view), method = "lm") +
   labs(x = "subscriber count", y = "view count")
 
-#making a scatter plot comparing video count and view count
 ggplot(final_df) +
-  geom_point(aes(video, view)) +
-  geom_smooth(aes(video, view), method = "lm") +
-  labs(x = "video count", y = "view count")
+  geom_col(aes(title, view_per_sub))
 ```
 
 
 
 
 ```{r}
+#making a scatter plot comparing video count and view count
 ggplot(final_df) +
-  geom_col(aes(title, view_per_sub))
+  geom_point(aes(video, view)) +
+  geom_smooth(aes(video, view), method = "lm") +
+  labs(x = "video count", y = "view count")
 
 ggplot(final_df) +
   geom_col(aes(title, view_per_video))
-
 ```
 
